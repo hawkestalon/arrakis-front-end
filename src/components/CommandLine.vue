@@ -35,13 +35,14 @@ import commands from '../commands/commands';
 
 <template>
   <div class="command-container">
-    <div v-for="cmd in commandHistory" class="command-line">
-      <span>{{ cmd.prompt }}</span>
-      <input type="text" :value="cmd.command" disabled>
-      {{ cmd.output }}
+    <div v-for="{ prompt, command, output} in commandHistory" class="command-line">
+      <span class="prompt">{{ prompt }}</span>
+      <input type="text" :value="command" disabled>
+      <component v-if="typeof output !== 'string'" :is="output" />
+      <span v-else>{{ output }}</span>
     </div>
     <div class="command-line">
-      <span>{{prompt}}</span>
+      <span class="prompt">{{prompt}}</span>
       <input type="text" id="cmd" placeholder="Enter a command..." v-model="command" autofocus  @keyup.enter="takeCommand()">
     </div>
   </div>
@@ -58,14 +59,14 @@ input:focus-visible {
   outline:none;
 }
 
+.prompt { 
+  color: initial !important;
+}
 .command-line {
   width: 100%;
-}
-
-.command-output {
   text-align: left;
-  font-size: 12px;
   color: #8fff27;
+  font-size: 12px;
 }
 
 .command-container {
@@ -76,5 +77,6 @@ input:focus-visible {
   border-color: gray;
   border-radius: 2px;
   padding-left: 5px;
+  overflow-y: scroll;
 }
 </style>
